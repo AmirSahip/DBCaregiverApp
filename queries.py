@@ -1,7 +1,12 @@
 from sqlalchemy import create_engine, text
 import sys
+import os
 
-connection_string = "postgresql://postgres:123456@localhost:5432/caregiver_platform"
+# Use environment variable for database URL, fallback to local for development
+connection_string = os.environ.get('DATABASE_URL', 'postgresql://postgres:123456@localhost:5432/caregiver_platform')
+# Render provides DATABASE_URL with postgres://, but SQLAlchemy needs postgresql://
+if connection_string.startswith('postgres://'):
+    connection_string = connection_string.replace('postgres://', 'postgresql://', 1)
 
 try:
     engine = create_engine(connection_string, echo=True)
