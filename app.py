@@ -2,11 +2,10 @@ from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime, date, time
 import os
+from sqlalchemy import create_engine, text
 
 app = Flask(__name__)
-# Use environment variable for database URL, fallback to local for development
 database_url = os.environ.get('DATABASE_URL', 'postgresql://postgres:123456@localhost:5432/caregiver_platform')
-# Render provides DATABASE_URL with postgres://, but SQLAlchemy needs postgresql://
 if database_url.startswith('postgres://'):
     database_url = database_url.replace('postgres://', 'postgresql://', 1)
 app.config['SQLALCHEMY_DATABASE_URI'] = database_url
@@ -15,9 +14,6 @@ app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'your-secret-key-here')
 
 db = SQLAlchemy(app)
 
-# ========================================
-# MODELS (Database Tables)
-# ========================================
 
 class User(db.Model):
     __tablename__ = 'USER'
@@ -77,17 +73,9 @@ class Appointment(db.Model):
     work_hours = db.Column(db.Numeric(5, 2), nullable=False)
     status = db.Column(db.String(20), nullable=False)
 
-# ========================================
-# ROUTES
-# ========================================
-
 @app.route('/')
 def index():
     return render_template('index.html')
-
-# ========================================
-# USER ROUTES
-# ========================================
 
 @app.route('/users')
 def users():
@@ -136,9 +124,6 @@ def delete_user(user_id):
     flash('User deleted successfully!', 'success')
     return redirect(url_for('users'))
 
-# ========================================
-# CAREGIVER ROUTES
-# ========================================
 
 @app.route('/caregivers')
 def caregivers():
@@ -184,9 +169,6 @@ def delete_caregiver(caregiver_user_id):
     flash('Caregiver deleted successfully!', 'success')
     return redirect(url_for('caregivers'))
 
-# ========================================
-# MEMBER ROUTES
-# ========================================
 
 @app.route('/members')
 def members():
@@ -227,10 +209,6 @@ def delete_member(member_user_id):
     db.session.commit()
     flash('Member deleted successfully!', 'success')
     return redirect(url_for('members'))
-
-# ========================================
-# ADDRESS ROUTES
-# ========================================
 
 @app.route('/addresses')
 def addresses():
@@ -277,10 +255,6 @@ def delete_address(member_user_id):
     db.session.commit()
     flash('Address deleted successfully!', 'success')
     return redirect(url_for('addresses'))
-
-# ========================================
-# JOB ROUTES
-# ========================================
 
 @app.route('/jobs')
 def jobs():
@@ -329,10 +303,6 @@ def delete_job(job_id):
     flash('Job deleted successfully!', 'success')
     return redirect(url_for('jobs'))
 
-# ========================================
-# JOB APPLICATION ROUTES
-# ========================================
-
 @app.route('/applications')
 def applications():
     all_applications = db.session.query(JobApplication, Job, Caregiver, User).join(
@@ -367,10 +337,6 @@ def delete_application(caregiver_user_id, job_id):
     db.session.commit()
     flash('Application deleted successfully!', 'success')
     return redirect(url_for('applications'))
-
-# ========================================
-# APPOINTMENT ROUTES
-# ========================================
 
 @app.route('/appointments')
 def appointments():
@@ -427,9 +393,25 @@ def delete_appointment(appointment_id):
     flash('Appointment deleted successfully!', 'success')
     return redirect(url_for('appointments'))
 
-# ========================================
-# RUN APP
-# ========================================
+@app.route('/init-db')
+def init_database():
+    """Initialize database - run this once after deployment"""
+    try:
+        import subprocess
+        import sys
+        
+        result = subprocess.run([sys.executable, 'queries.py'], 
+                              capture_output=True, 
+                              text=True, 
+                              timeout=300)
+        
+        if result.returncode == 0:
+            return f'<h1>Database Initialized Successfully!</h1><pre>{result.stdout}</pre><p><a href="/">Go to Home</a></p>', 200
+        else:
+            return f'<h1>Error Initializing Database</h1><pre>{result.stderr}</pre><p><a href="/">Go to Home</a></p>', 500
+    except Exception as e:
+        return f'<h1>Error: {str(e)}</h1><p><a href="/">Go to Home</a></p>', 500
+
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
