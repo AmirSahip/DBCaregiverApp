@@ -1,12 +1,7 @@
 from sqlalchemy import create_engine, text
 import sys
-import os
 
-# Use environment variable for database URL (for Render), fallback to local for development
-connection_string = os.environ.get('DATABASE_URL', 'postgresql://postgres:123456@localhost:5432/caregiver_platform')
-# Render provides DATABASE_URL with postgres://, but SQLAlchemy needs postgresql://
-if connection_string.startswith('postgres://'):
-    connection_string = connection_string.replace('postgres://', 'postgresql://', 1)
+connection_string = "postgresql://postgres:123456@localhost:5432/caregiver_platform"
 
 try:
     engine = create_engine(connection_string, echo=True)
@@ -215,7 +210,7 @@ execute_query(insert_addresses, fetch=False)
 print("2.5: Insert data into JOB table")
 insert_jobs = """
 insert into job (member_user_id, required_caregiving_type, other_requirements, date_posted) values
-(11, 'babysitter', 'Good with technology and games and manga', '2025-10-01'),
+(11, 'babysitter', 'Good with technology and games and manga, soft-spoken preferred', '2025-10-01'),
 (12, 'elderly care', 'Experience with ear issues pateints', '2025-7-02'),
 (13, 'babysitter', 'Must energetic with multiple children', '2025-8-03'),
 (16, 'playmate', 'Creative and active', '2025-11-04'),
@@ -225,7 +220,8 @@ insert into job (member_user_id, required_caregiving_type, other_requirements, d
 (17, 'babysitter', 'Experience with piloting the f1 bolid', '2025-12-08'),
 (18, 'elderly care', 'Experience with gentle approach', '2025-1-09'),
 (19, 'playmate', 'Sports and fun', '2025-4-10'),
-(20, 'babysitter', 'Music background', '2025-5-11');
+(20, 'babysitter', 'Music background', '2025-5-11'),
+(20, 'elderly care', 'Patient and understanding caregiver needed', '2025-6-12');
 """
 execute_query(insert_jobs, fetch=False)
 
@@ -259,9 +255,7 @@ insert into job_application (caregiver_user_id, job_id, date_applied) values
 (5, 9, '2025-01-11'),
 (3, 10, '2025-04-11'),
 (9, 10, '2025-04-12'),
-(6, 11, '2025-05-12'),
-(3, 12, '2025-06-13'),
-(1, 12, '2025-06-14');
+(6, 11, '2025-05-12');
 """
 execute_query(insert_job_applications, fetch=False)
 
@@ -424,7 +418,7 @@ JOIN "USER" u ON m.member_user_id = u.user_id
 JOIN job j ON m.member_user_id = j.member_user_id
 WHERE u.city = 'Astana' 
     AND m.house_rules ILIKE '%No pets%'
-    AND j.required_caregiving_type = 'elderly Care';
+    AND j.required_caregiving_type = 'elderly care';
 """
 execute_query(query_5_4)
 

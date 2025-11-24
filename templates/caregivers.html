@@ -24,9 +24,9 @@
             <td>{{ caregiver.caregiver_user_id }}</td>
             <td>
                 {% if caregiver.photo %}
-                    <img src="{{ caregiver.photo }}" alt="{{ user.given_name }} {{ user.surname }}" style="max-width: 100px; max-height: 100px; border-radius: 5px;">
+                    <img src="{{ caregiver.photo }}" alt="{{ user.given_name }} {{ user.surname }}" width="80" height="80">
                 {% else %}
-                    <span style="color: #999;">No photo</span>
+                    No photo
                 {% endif %}
             </td>
             <td>{{ user.given_name }} {{ user.surname }}</td>
