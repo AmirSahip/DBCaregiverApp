@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}Members - Caregiver Platform{% endblock %}
+
+{% block content %}
+<h1>Members</h1>
+<a href="{{ url_for('add_member') }}" class="btn btn-success">Add New Member</a>
+
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>House Rules</th>
+            <th>Dependent Description</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for member, user in members %}
+        <tr>
+            <td>{{ member.member_user_id }}</td>
+            <td>{{ user.given_name }} {{ user.surname }}</td>
+            <td>{{ member.house_rules or 'N/A' }}</td>
+            <td>{{ member.dependent_description or 'N/A' }}</td>
+            <td>
+                <a href="{{ url_for('edit_member', member_user_id=member.member_user_id) }}" class="btn">Edit</a>
+                <a href="{{ url_for('delete_member', member_user_id=member.member_user_id) }}" class="btn btn-danger" onclick="return confirm('Are you sure?')">Delete</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
+

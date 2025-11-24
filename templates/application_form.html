@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}Add Job Application - Caregiver Platform{% endblock %}
+
+{% block content %}
+<h1>Add Job Application</h1>
+<form method="POST">
+    <div class="form-group">
+        <label>Caregiver:</label>
+        <select name="caregiver_user_id" required>
+            {% for caregiver in caregivers %}
+            <option value="{{ caregiver.caregiver_user_id }}">Caregiver ID: {{ caregiver.caregiver_user_id }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="form-group">
+        <label>Job:</label>
+        <select name="job_id" required>
+            {% for job in jobs %}
+            <option value="{{ job.job_id }}">Job ID: {{ job.job_id }} - {{ job.required_caregiving_type }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="form-group">
+        <label>Date Applied:</label>
+        <input type="date" name="date_applied" required>
+    </div>
+    <button type="submit" class="btn btn-success">Add Application</button>
+    <a href="{{ url_for('applications') }}" class="btn">Cancel</a>
+</form>
+{% endblock %}
+

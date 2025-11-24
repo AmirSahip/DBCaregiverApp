@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}Jobs - Caregiver Platform{% endblock %}
+
+{% block content %}
+<h1>Jobs</h1>
+<a href="{{ url_for('add_job') }}" class="btn btn-success">Add New Job</a>
+
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Member</th>
+            <th>Required Type</th>
+            <th>Other Requirements</th>
+            <th>Date Posted</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for job, member, user in jobs %}
+        <tr>
+            <td>{{ job.job_id }}</td>
+            <td>{{ user.given_name }} {{ user.surname }}</td>
+            <td>{{ job.required_caregiving_type }}</td>
+            <td>{{ job.other_requirements or 'N/A' }}</td>
+            <td>{{ job.date_posted }}</td>
+            <td>
+                <a href="{{ url_for('edit_job', job_id=job.job_id) }}" class="btn">Edit</a>
+                <a href="{{ url_for('delete_job', job_id=job.job_id) }}" class="btn btn-danger" onclick="return confirm('Are you sure?')">Delete</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
+

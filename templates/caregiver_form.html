@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %}{% if caregiver %}Edit{% else %}Add{% endif %} Caregiver - Caregiver Platform{% endblock %}
+
+{% block content %}
+<h1>{% if caregiver %}Edit{% else %}Add{% endif %} Caregiver</h1>
+<form method="POST">
+    <div class="form-group">
+        <label>User:</label>
+        <select name="caregiver_user_id" {% if caregiver %}disabled{% else %}required{% endif %}>
+            {% for user in users %}
+            <option value="{{ user.user_id }}" {% if caregiver and caregiver.caregiver_user_id == user.user_id %}selected{% endif %}>
+                {{ user.user_id }} - {{ user.given_name }} {{ user.surname }}
+            </option>
+            {% endfor %}
+        </select>
+        {% if caregiver %}
+        <input type="hidden" name="caregiver_user_id" value="{{ caregiver.caregiver_user_id }}">
+        {% endif %}
+    </div>
+    <div class="form-group">
+        <label>Photo URL:</label>
+        <input type="text" name="photo" value="{{ caregiver.photo if caregiver else '' }}">
+    </div>
+    <div class="form-group">
+        <label>Gender:</label>
+        <select name="gender">
+            <option value="">Select...</option>
+            <option value="Male" {% if caregiver and caregiver.gender == 'Male' %}selected{% endif %}>Male</option>
+            <option value="Female" {% if caregiver and caregiver.gender == 'Female' %}selected{% endif %}>Female</option>
+            <option value="Other" {% if caregiver and caregiver.gender == 'Other' %}selected{% endif %}>Other</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label>Caregiving Type:</label>
+        <select name="caregiving_type" required>
+            <option value="babysitter" {% if caregiver and caregiver.caregiving_type == 'babysitter' %}selected{% endif %}>Babysitter</option>
+            <option value="elderly care" {% if caregiver and caregiver.caregiving_type == 'elderly care' %}selected{% endif %}>Elderly Care</option>
+            <option value="playmate" {% if caregiver and caregiver.caregiving_type == 'playmate' %}selected{% endif %}>Playmate</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label>Hourly Rate:</label>
+        <input type="number" name="hourly_rate" step="0.01" value="{{ caregiver.hourly_rate if caregiver else '' }}" required>
+    </div>
+    <button type="submit" class="btn btn-success">{% if caregiver %}Update{% else %}Add{% endif %} Caregiver</button>
+    <a href="{{ url_for('caregivers') }}" class="btn">Cancel</a>
+</form>
+{% endblock %}
+

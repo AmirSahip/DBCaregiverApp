@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}{% if user %}Edit{% else %}Add{% endif %} User - Caregiver Platform{% endblock %}
+
+{% block content %}
+<h1>{% if user %}Edit{% else %}Add{% endif %} User</h1>
+<form method="POST">
+    <div class="form-group">
+        <label>Email:</label>
+        <input type="email" name="email" value="{{ user.email if user else '' }}" required>
+    </div>
+    <div class="form-group">
+        <label>Given Name:</label>
+        <input type="text" name="given_name" value="{{ user.given_name if user else '' }}" required>
+    </div>
+    <div class="form-group">
+        <label>Surname:</label>
+        <input type="text" name="surname" value="{{ user.surname if user else '' }}" required>
+    </div>
+    <div class="form-group">
+        <label>City:</label>
+        <input type="text" name="city" value="{{ user.city if user else '' }}">
+    </div>
+    <div class="form-group">
+        <label>Phone Number:</label>
+        <input type="text" name="phone_number" value="{{ user.phone_number if user else '' }}">
+    </div>
+    <div class="form-group">
+        <label>Profile Description:</label>
+        <textarea name="profile_description" rows="3">{{ user.profile_description if user else '' }}</textarea>
+    </div>
+    <div class="form-group">
+        <label>Password:</label>
+        <input type="text" name="password" value="{{ user.password if user else '' }}" required>
+    </div>
+    <button type="submit" class="btn btn-success">{% if user %}Update{% else %}Add{% endif %} User</button>
+    <a href="{{ url_for('users') }}" class="btn">Cancel</a>
+</form>
+{% endblock %}
+

@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}Update Job - Caregiver Platform{% endblock %}
+
+{% block content %}
+<h1>Update Job</h1>
+<form method="POST">
+    <div class="form-group">
+        <label>Required Caregiving Type:</label>
+        <select name="required_caregiving_type" required>
+            <option value="babysitter" {% if job.required_caregiving_type == 'babysitter' %}selected{% endif %}>Babysitter</option>
+            <option value="elderly care" {% if job.required_caregiving_type == 'elderly care' %}selected{% endif %}>Elderly Care</option>
+            <option value="playmate" {% if job.required_caregiving_type == 'playmate' %}selected{% endif %}>Playmate</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label>Other Requirements:</label>
+        <textarea name="other_requirements" rows="3">{{ job.other_requirements or '' }}</textarea>
+    </div>
+    <div class="form-group">
+        <label>Date Posted:</label>
+        <input type="date" name="date_posted" value="{{ job.date_posted }}" required>
+    </div>
+    <button type="submit" class="btn btn-success">Update Job</button>
+    <a href="{{ url_for('list_jobs') }}" class="btn">Cancel</a>
+</form>
+{% endblock %}
+

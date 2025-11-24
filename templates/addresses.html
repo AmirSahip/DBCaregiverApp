@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}Addresses - Caregiver Platform{% endblock %}
+
+{% block content %}
+<h1>Addresses</h1>
+<a href="{{ url_for('add_address') }}" class="btn btn-success">Add New Address</a>
+
+<table>
+    <thead>
+        <tr>
+            <th>Member ID</th>
+            <th>Member Name</th>
+            <th>House Number</th>
+            <th>Street</th>
+            <th>Town</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for address, member, user in addresses %}
+        <tr>
+            <td>{{ address.member_user_id }}</td>
+            <td>{{ user.given_name }} {{ user.surname }}</td>
+            <td>{{ address.house_number or 'N/A' }}</td>
+            <td>{{ address.street }}</td>
+            <td>{{ address.town or 'N/A' }}</td>
+            <td>
+                <a href="{{ url_for('edit_address', member_user_id=address.member_user_id) }}" class="btn">Edit</a>
+                <a href="{{ url_for('delete_address', member_user_id=address.member_user_id) }}" class="btn btn-danger" onclick="return confirm('Are you sure?')">Delete</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
+

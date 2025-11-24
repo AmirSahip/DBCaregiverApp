@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}{% if member %}Edit{% else %}Add{% endif %} Member - Caregiver Platform{% endblock %}
+
+{% block content %}
+<h1>{% if member %}Edit{% else %}Add{% endif %} Member</h1>
+<form method="POST">
+    <div class="form-group">
+        <label>User:</label>
+        <select name="member_user_id" {% if member %}disabled{% else %}required{% endif %}>
+            {% for user in users %}
+            <option value="{{ user.user_id }}" {% if member and member.member_user_id == user.user_id %}selected{% endif %}>
+                {{ user.user_id }} - {{ user.given_name }} {{ user.surname }}
+            </option>
+            {% endfor %}
+        </select>
+        {% if member %}
+        <input type="hidden" name="member_user_id" value="{{ member.member_user_id }}">
+        {% endif %}
+    </div>
+    <div class="form-group">
+        <label>House Rules:</label>
+        <textarea name="house_rules" rows="3">{{ member.house_rules if member else '' }}</textarea>
+    </div>
+    <div class="form-group">
+        <label>Dependent Description:</label>
+        <textarea name="dependent_description" rows="3">{{ member.dependent_description if member else '' }}</textarea>
+    </div>
+    <button type="submit" class="btn btn-success">{% if member %}Update{% else %}Add{% endif %} Member</button>
+    <a href="{{ url_for('members') }}" class="btn">Cancel</a>
+</form>
+{% endblock %}
+

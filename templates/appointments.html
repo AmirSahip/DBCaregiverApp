@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}Appointments - Caregiver Platform{% endblock %}
+
+{% block content %}
+<h1>Appointments</h1>
+<a href="{{ url_for('add_appointment') }}" class="btn btn-success">Add New Appointment</a>
+
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Caregiver</th>
+            <th>Member</th>
+            <th>Date</th>
+            <th>Time</th>
+            <th>Work Hours</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for appointment, caregiver, member, user in appointments %}
+        <tr>
+            <td>{{ appointment.appointment_id }}</td>
+            <td>Caregiver ID: {{ appointment.caregiver_user_id }}</td>
+            <td>{{ user.given_name }} {{ user.surname }}</td>
+            <td>{{ appointment.appointment_date }}</td>
+            <td>{{ appointment.appointment_time }}</td>
+            <td>{{ appointment.work_hours }}</td>
+            <td>{{ appointment.status }}</td>
+            <td>
+                <a href="{{ url_for('edit_appointment', appointment_id=appointment.appointment_id) }}" class="btn">Edit</a>
+                <a href="{{ url_for('delete_appointment', appointment_id=appointment.appointment_id) }}" class="btn btn-danger" onclick="return confirm('Are you sure?')">Delete</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
+
